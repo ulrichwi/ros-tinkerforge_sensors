@@ -137,6 +137,7 @@ set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
   src/sensor_device.cpp
   src/tinkerforge_2_1_23/ip_connection.c
   src/tinkerforge_2_1_23/brick_imu.c
+  src/tinkerforge_2_1_23/bricklet_accelerometer.c
   src/tinkerforge_2_1_23/bricklet_gps.c
   src/tinkerforge_2_1_23/bricklet_industrial_digital_in_4.c
   src/tinkerforge_2_1_23/bricklet_dual_button.c

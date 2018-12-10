@@ -9,6 +9,7 @@
 #include "ip_connection.h"
 #include "brick_imu.h"
 #include "brick_imu_v2.h"
+#include "bricklet_accelerometer.h"
 #include "bricklet_gps.h"
 #include "bricklet_industrial_digital_in_4.h"
 #include "bricklet_dual_button.h"
@@ -17,6 +18,7 @@
 #include "bricklet_distance_ir.h"
 #include "bricklet_distance_us.h"
 #include "bricklet_motion_detector.h"
+
 
 #define M_PI	3.14159265358979323846  /* pi */
 
@@ -36,6 +38,9 @@ public:
 
   //! Publish the IMU message
   void publishImuMessage(SensorDevice *sensor);
+
+  //! Publish the Accelerometer message
+  void publishAccelerometerMessage(SensorDevice *sensor);
 
   //! Publish the NavSatFix message.
   void publishNavSatFixMessage(SensorDevice *sensor);

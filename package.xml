@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>tinkerforge_sensors</name>
-  <version>0.1.0</version>
+  <version>0.1.1</version>
   <description>The tinkerforge_sensors package</description>
 
   <maintainer email="gustav484@web.de">Markus Fischer</maintainer>

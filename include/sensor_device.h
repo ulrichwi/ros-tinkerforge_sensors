@@ -6,6 +6,7 @@
 #include <sstream>
 #include <stdint.h>
 #include "ros/ros.h"
+#include "bricklet_accelerometer.h"
 #include "bricklet_ambient_light.h"
 #include "bricklet_ambient_light_v2.h"
 #include "bricklet_distance_ir.h"
@@ -17,7 +18,7 @@
 
 #define IMU_V2_MAGNETIC_DEVICE_IDENTIFIER 400
 
-enum class SensorClass {TEMPERATURE, LIGHT, IMU, RANGE, GPS, MAGNETIC, MISC};
+enum class SensorClass {TEMPERATURE, LIGHT, IMU, RANGE, GPS, MAGNETIC, MISC, ACCEL};
 
 struct SensorConf
 {
@@ -62,6 +63,9 @@ public:
         break;
         case SensorClass::IMU:
           topic = std::string("/") + std::string("tfsensors") + std::string("/") + std::string("imu") + std::string(stream.str());
+        break;
+        case SensorClass::ACCEL:
+          topic = std::string("/") + std::string("tfsensors") + std::string("/") + std::string("accelerometer") + std::string(stream.str());
         break;
         case SensorClass::LIGHT:
           // conversion not working with my compiler

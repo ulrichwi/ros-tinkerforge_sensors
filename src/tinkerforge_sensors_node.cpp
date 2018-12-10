@@ -100,6 +100,8 @@ int main (int argc, char **argv)
       case IMU_V2_MAGNETIC_DEVICE_IDENTIFIER:
         (*Iter)->setPub(n.advertise<sensor_msgs::MagneticField>((*Iter)->getTopic().c_str(), 50));
       break;
+      case ACCELEROMETER_DEVICE_IDENTIFIER:
+        (*Iter)->setPub(n.advertise<sensor_msgs::Imu>((*Iter)->getTopic().c_str(), 50));
     }
   }
 

@@ -21,6 +21,7 @@
 #include "bricklet_ambient_light_v2.h"
 #include "brick_imu.h"
 #include "brick_imu_v2.h"
+#include "bricklet_accelerometer.h"
 #include "bricklet_gps.h"
 #include "bricklet_industrial_digital_in_4.h"
 #include "bricklet_dual_button.h"
@@ -66,6 +67,10 @@ TinkerforgeSensors::~TinkerforgeSensors()
     SensorDevice *dev = sensors.front();
     switch (dev->getType())
     {
+      case ACCELEROMETER_DEVICE_IDENTIFIER:
+	accelerometer_led_off((Accelerometer*)dev->getDev());
+        accelerometer_destroy((Accelerometer*)dev->getDev());
+      break;      
       case AMBIENT_LIGHT_DEVICE_IDENTIFIER:
         ambient_light_destroy((AmbientLight*)dev->getDev());
       break;
@@ -259,6 +264,60 @@ void TinkerforgeSensors::publishImuMessage(SensorDevice *sensor)
     sensor->getPub().publish(imu_msg);
   }
 }
+
+
+/*----------------------------------------------------------------------
+ * publishAccelerometerMessage()
+ * Publish the Accelerometer message.
+ *--------------------------------------------------------------------*/
+
+void TinkerforgeSensors::publishAccelerometerMessage(SensorDevice *sensor)
+{
+  int16_t acc_x, acc_y, acc_z;
+  int16_t acc_temp;
+  float f_acc_x = 0.0, f_acc_y = 0.0, f_acc_z = 0.0;
+  ros::Time current_time = ros::Time::now();
+  tf::TransformBroadcaster tf_broadcaster;
+  if (sensor != NULL)
+  {
+    sensor_msgs::Imu accelerometer_msg;
+
+     // for Accelerometer Bricklet look at https://www.tinkerforge.com/en/doc/Software/Bricklets/Accelerometer_Bricklet_C.html#accelerometer-bricklet-c-api
+    if (sensor->getType() == ACCELEROMETER_DEVICE_IDENTIFIER)
+    {
+      accelerometer_get_acceleration((Accelerometer*)sensor->getDev(), &acc_x, &acc_y, &acc_z);
+      accelerometer_get_temperature((Accelerometer*)sensor->getDev(), &acc_temp);
+  
+      // acceleration from 0.01*m/s^2 to m/s^2
+      f_acc_x = float(acc_x);
+      f_acc_y = float(acc_y);
+      f_acc_z = float(acc_z);
+   
+     // acceleration from mG to m/s²
+     // f_acc_x = (float(acc_x)/1000.0)*9.80605;
+     // f_acc_y = (float(acc_y)/1000.0)*9.80605;
+     // f_acc_z = (float(acc_z)/1000.0)*9.80605;
+
+    }
+    else
+    {
+      return;
+    }
+
+    // message header
+    accelerometer_msg.header.seq = sensor->getSeq();
+    accelerometer_msg.header.stamp = current_time;
+    accelerometer_msg.header.frame_id = sensor->getFrame();
+
+    accelerometer_msg.linear_acceleration.x = f_acc_x;
+    accelerometer_msg.linear_acceleration.y = f_acc_y;
+    accelerometer_msg.linear_acceleration.z = f_acc_z;
+ //   accelerometer_msg.temp = acc_temp;
+
+    sensor->getPub().publish(accelerometer_msg);
+  }
+}
+
 
 /*----------------------------------------------------------------------
  * publishMagneticFieldMessage()
@@ -520,6 +579,9 @@ void TinkerforgeSensors::publishSensors()
       case SensorClass::IMU:
         publishImuMessage(*lIter);
       break;
+      case SensorClass::ACCEL:
+        publishAccelerometerMessage(*lIter);
+      break;
       case SensorClass::MAGNETIC:
         publishMagneticFieldMessage(*lIter);
       break;
@@ -639,6 +701,15 @@ void TinkerforgeSensors::callbackEnumerate(const char *uid, const char *connecte
     SensorDevice *temp_dev = new SensorDevice(temp, uid, topic, TEMPERATURE_DEVICE_IDENTIFIER, SensorClass::TEMPERATURE, 10);
     tfs->sensors.push_back(temp_dev);
 
+  }
+  else if (device_identifier == ACCELEROMETER_DEVICE_IDENTIFIER)
+  {
+    ROS_INFO_STREAM("found Accelerometer with UID:" << uid);
+    // Create Accelerometer device object
+    Accelerometer *accelerometer = new Accelerometer();
+    accelerometer_create(accelerometer, uid, &(tfs->ipcon));
+    SensorDevice *accelerometer_dev = new SensorDevice(accelerometer, uid, topic, ACCELEROMETER_DEVICE_IDENTIFIER, SensorClass::ACCEL, 10);
+    tfs->sensors.push_back(accelerometer_dev);
   }
   else if (device_identifier == AMBIENT_LIGHT_DEVICE_IDENTIFIER)
   {
