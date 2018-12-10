@@ -708,6 +708,7 @@ void TinkerforgeSensors::callbackEnumerate(const char *uid, const char *connecte
     // Create Accelerometer device object
     Accelerometer *accelerometer = new Accelerometer();
     accelerometer_create(accelerometer, uid, &(tfs->ipcon));
+    accelerometer_led_on(accelerometer);
     SensorDevice *accelerometer_dev = new SensorDevice(accelerometer, uid, topic, ACCELEROMETER_DEVICE_IDENTIFIER, SensorClass::ACCEL, 10);
     tfs->sensors.push_back(accelerometer_dev);
   }
