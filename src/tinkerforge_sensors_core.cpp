@@ -327,7 +327,7 @@ void TinkerforgeSensors::publishNavSatFixMessage(SensorDevice *sensor)
   uint8_t fix, satellites_view, satellites_used;
   uint16_t pdop, hdop, vdop, epe;
   uint32_t latitude, longitude;
-  uint32_t altitude, geoidal_separation;
+  int32_t altitude, geoidal_separation;
   uint32_t course, speed;
   char ns, ew;
   if (sensor != NULL)

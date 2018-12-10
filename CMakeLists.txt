@@ -117,7 +117,7 @@ catkin_package(
 include_directories(
   ${catkin_INCLUDE_DIRS}
   ${PROJECT_SOURCE_DIR}/include
-  ${PROJECT_SOURCE_DIR}/include/tinkerforge
+  ${PROJECT_SOURCE_DIR}/include/tinkerforge_2_1_23
 )
 
 ## Declare a C++ library
@@ -135,18 +135,18 @@ set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
  add_executable(tinkerforge_sensors_node src/tinkerforge_sensors_node.cpp
   src/tinkerforge_sensors_core.cpp
   src/sensor_device.cpp
-  src/tinkerforge/ip_connection.cpp
-  src/tinkerforge/brick_imu.cpp
-  src/tinkerforge/bricklet_gps.c
-  src/tinkerforge/bricklet_industrial_digital_in_4.c
-  src/tinkerforge/bricklet_dual_button.c
-  src/tinkerforge/brick_imu_v2.c 
-  src/tinkerforge/bricklet_ambient_light.c
-  src/tinkerforge/bricklet_ambient_light_v2.c
-  src/tinkerforge/bricklet_distance_ir.c
-  src/tinkerforge/bricklet_distance_us.c
-  src/tinkerforge/bricklet_temperature.c
-  src/tinkerforge/bricklet_motion_detector.c
+  src/tinkerforge_2_1_23/ip_connection.c
+  src/tinkerforge_2_1_23/brick_imu.c
+  src/tinkerforge_2_1_23/bricklet_gps.c
+  src/tinkerforge_2_1_23/bricklet_industrial_digital_in_4.c
+  src/tinkerforge_2_1_23/bricklet_dual_button.c
+  src/tinkerforge_2_1_23/brick_imu_v2.c 
+  src/tinkerforge_2_1_23/bricklet_ambient_light.c
+  src/tinkerforge_2_1_23/bricklet_ambient_light_v2.c
+  src/tinkerforge_2_1_23/bricklet_distance_ir.c
+  src/tinkerforge_2_1_23/bricklet_distance_us.c
+  src/tinkerforge_2_1_23/bricklet_temperature.c
+  src/tinkerforge_2_1_23/bricklet_motion_detector.c
  )
 
 ## Add cmake target dependencies of the executable
