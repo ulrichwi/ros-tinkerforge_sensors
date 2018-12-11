@@ -148,6 +148,7 @@ set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
   src/tinkerforge/bricklet_distance_ir_v2.c
   src/tinkerforge/bricklet_distance_us.c
   src/tinkerforge/bricklet_temperature.c
+  src/tinkerforge/bricklet_temperature_ir_v2.c
   src/tinkerforge/bricklet_motion_detector.c
  )
 

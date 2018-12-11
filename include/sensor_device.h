@@ -16,10 +16,11 @@
 #include "brick_imu.h"
 #include "brick_imu_v2.h"
 #include "bricklet_temperature.h"
+#include "bricklet_temperature_ir_v2.h"
 
 #define IMU_V2_MAGNETIC_DEVICE_IDENTIFIER 400
 
-enum class SensorClass {TEMPERATURE, LIGHT, IMU, RANGE, GPS, MAGNETIC, MISC, ACCEL};
+enum class SensorClass {TEMPERATURE, TEMPERATURE_OBJ, LIGHT, IMU, RANGE, GPS, MAGNETIC, MISC, ACCEL};
 
 struct SensorConf
 {
@@ -81,6 +82,9 @@ public:
         break;
         case SensorClass::TEMPERATURE:
           topic = std::string("/") + std::string("tfsensors") + std::string("/") + std::string("temperature") + std::string(stream.str());
+        break;
+        case SensorClass::TEMPERATURE_OBJ:
+          topic = std::string("/") + std::string("tfsensors") + std::string("/") + std::string("temperature_ir") + std::string(stream.str());
         break;
       }
       sensor->topic = topic;

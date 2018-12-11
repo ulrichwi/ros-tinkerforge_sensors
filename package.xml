@@ -4,7 +4,7 @@
   <version>0.1.1</version>
   <description>The tinkerforge_sensors package</description>
 
-  <maintainer email="gustav484@web.de">Markus Fischer</maintainer>
+  <author email="gustav484@web.de">Markus Fischer</author>
   <maintainer email="ulrik@gmx.at">Ulrich Wirleitner</maintainer>
   <license>MIT</license>
 

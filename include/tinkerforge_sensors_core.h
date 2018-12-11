@@ -15,6 +15,7 @@
 #include "bricklet_dual_button.h"
 #include "bricklet_ambient_light.h"
 #include "bricklet_temperature.h"
+#include "bricklet_temperature_ir_v2.h"
 #include "bricklet_distance_ir.h"
 #include "bricklet_distance_ir_v2.h"
 #include "bricklet_distance_us.h"
@@ -52,7 +53,10 @@ public:
   //! Publish the Temperature message
   void publishTemperatureMessage(SensorDevice *sensor);
 
-  //! Publish the Illuminance message
+  //! Publish the TemperatureObject message
+  void publishTemperatureObjectMessage(SensorDevice *sensor);
+
+    //! Publish the Illuminance message
   void publishIlluminanceMessage(SensorDevice *sensor);
 
   //! Publish the Range message

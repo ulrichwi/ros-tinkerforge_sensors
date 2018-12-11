@@ -26,6 +26,7 @@
 #include "bricklet_industrial_digital_in_4.h"
 #include "bricklet_dual_button.h"
 #include "bricklet_temperature.h"
+#include "bricklet_temperature_ir_v2.h"
 #include "bricklet_distance_ir.h"
 #include "bricklet_distance_ir_v2.h"
 #include "bricklet_distance_us.h"
@@ -103,6 +104,9 @@ TinkerforgeSensors::~TinkerforgeSensors()
       break;
       case TEMPERATURE_DEVICE_IDENTIFIER:
         temperature_destroy((Temperature*)dev->getDev());
+      break;
+      case TEMPERATURE_IR_V2_DEVICE_IDENTIFIER:
+        temperature_ir_v2_destroy((TemperatureIRV2*)dev->getDev());
       break;
     }
     delete dev;
@@ -453,6 +457,34 @@ void TinkerforgeSensors::publishTemperatureMessage(SensorDevice *sensor)
   }
 }
 
+
+void TinkerforgeSensors::publishTemperatureObjectMessage(SensorDevice *sensor)
+{
+  if (sensor != NULL)
+  {
+    int16_t temperature;
+    if(temperature_ir_v2_get_object_temperature((Temperature*)sensor->getDev(), &temperature) < 0) {
+        ROS_ERROR_STREAM("Could not get temperature from " << sensor->getUID() << ", probably timeout");
+        return;
+    }
+    // generate Temperature message from temperature sensor
+    sensor_msgs::Temperature temp_msg;
+
+    // message header
+    temp_msg.header.seq =  sensor->getSeq();
+    temp_msg.header.stamp = ros::Time::now();
+    temp_msg.header.frame_id = sensor->getFrame();
+
+    temp_msg.temperature = temperature / 100.0;
+    temp_msg.variance = 0;
+
+    // publish Temperature msg to ros
+    sensor->getPub().publish(temp_msg);
+  }
+}
+
+
+
 /*----------------------------------------------------------------------
  * publishRangeMessage()
  * Publish the Range message.
@@ -565,7 +597,7 @@ void TinkerforgeSensors::publishIlluminanceMessage(SensorDevice *sensor)
     illum_msg.illuminance = illuminance;
     illum_msg.variance = 0;
 
-    // publish Temperature msg to ros
+    // publish Illuminance msg to ros
     sensor->getPub().publish(illum_msg);
   }
 }
@@ -601,6 +633,9 @@ void TinkerforgeSensors::publishSensors()
       break;
       case SensorClass::TEMPERATURE:
         publishTemperatureMessage(*lIter);
+      break;
+      case SensorClass::TEMPERATURE_OBJ:
+        publishTemperatureObjectMessage(*lIter);
       break;
     }
   }
@@ -711,7 +746,16 @@ void TinkerforgeSensors::callbackEnumerate(const char *uid, const char *connecte
 
     SensorDevice *temp_dev = new SensorDevice(temp, uid, topic, TEMPERATURE_DEVICE_IDENTIFIER, SensorClass::TEMPERATURE, 10);
     tfs->sensors.push_back(temp_dev);
+  }
+  else if (device_identifier == TEMPERATURE_IR_V2_DEVICE_IDENTIFIER)
+  {
+    ROS_INFO_STREAM("found Temperature IR V2 with UID:" << uid);
+    TemperatureIRV2 *temp = new TemperatureIRV2();
+    // Create Temperature IR V2 device object
+    temperature_ir_v2_create(temp, uid, &(tfs->ipcon));
 
+    SensorDevice *temp_dev = new SensorDevice(temp, uid, topic, TEMPERATURE_IR_V2_DEVICE_IDENTIFIER, SensorClass::TEMPERATURE_OBJ, 10);
+    tfs->sensors.push_back(temp_dev);
   }
   else if (device_identifier == ACCELEROMETER_DEVICE_IDENTIFIER)
   {

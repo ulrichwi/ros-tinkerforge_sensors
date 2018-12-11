@@ -100,6 +100,9 @@ int main (int argc, char **argv)
       case TEMPERATURE_DEVICE_IDENTIFIER:
         (*Iter)->setPub(n.advertise<sensor_msgs::Temperature>((*Iter)->getTopic().c_str(), 50));
       break;
+      case TEMPERATURE_IR_V2_DEVICE_IDENTIFIER:
+        (*Iter)->setPub(n.advertise<sensor_msgs::Temperature>((*Iter)->getTopic().c_str(), 50));
+      break;
       case IMU_V2_MAGNETIC_DEVICE_IDENTIFIER:
         (*Iter)->setPub(n.advertise<sensor_msgs::MagneticField>((*Iter)->getTopic().c_str(), 50));
       break;

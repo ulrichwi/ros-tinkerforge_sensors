@@ -1,5 +1,7 @@
 ### Tinkerforge Sensors
 
+Note: This library was forked from https://github.com/gus484/ros-tinkerforge_sensors
+
 Mit diesem Paket können Tinkerforge Sensoren im ROS genutzt werden. Auch Sensoren des gleichen Typs werden erkannt. Durch Nutzung des "robusten Ansatzes" ist die Angabe von UIDs nicht notwendig. Die Sensorwerte werden in entsprechende ROS-Messages über automatisch generierte Topics verbreitet. Unter Verwendung eines Launch-Files können Topic per UID manuell festgelegt werden.
 
 This package allows you to use TinkerForge sensors with ROS. Sensors of same type will be supported. Package used the "Rugged Approach", so it's not necessary to configure the sensor UIDs. Sensor values will be published over automatic generated topics with typical ROS message types. With a Launchfile a topic can be bind on an UID.
@@ -14,9 +16,11 @@ It's not recommended to run more than one instance of the program, because diffe
 
 Bricklets:
 
+* Accelerometer => sensor_msgs/Imu
 * Ambient Light => sensor_msgs/Illuminance
 * Ambient Light 2.0 => sensor_msgs/Illuminance
 * Distance IR => sensor_msgs/Range
+* Distance IR V2 => sensor_msgs/Range
 * Distance US => sensor_msgs/Range
 * GPS (Test) => sensor_msgs/NavSatFix
 * Motion Detector (Test)
@@ -33,7 +37,7 @@ Herunterladen des Git-Repository in das catkin workspace Verzeichnis.
 
 clone the git repository to catkin workspace.
 
-`git clone https://github.com/gus484/ros-tinkerforge_sensors`
+`git clone https://github.com/ulrichwi/ros-tinkerforge_sensors`
 
 Workspace kompilieren / build workspace
 
