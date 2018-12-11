@@ -27,6 +27,7 @@
 #include "bricklet_dual_button.h"
 #include "bricklet_temperature.h"
 #include "bricklet_distance_ir.h"
+#include "bricklet_distance_ir_v2.h"
 #include "bricklet_distance_us.h"
 #include "bricklet_motion_detector.h"
 #include <tf/transform_broadcaster.h>
@@ -68,7 +69,7 @@ TinkerforgeSensors::~TinkerforgeSensors()
     switch (dev->getType())
     {
       case ACCELEROMETER_DEVICE_IDENTIFIER:
-	accelerometer_led_off((Accelerometer*)dev->getDev());
+        accelerometer_led_off((Accelerometer*)dev->getDev());
         accelerometer_destroy((Accelerometer*)dev->getDev());
       break;      
       case AMBIENT_LIGHT_DEVICE_IDENTIFIER:
@@ -79,6 +80,9 @@ TinkerforgeSensors::~TinkerforgeSensors()
       break;
       case DISTANCE_IR_DEVICE_IDENTIFIER:
         distance_ir_destroy((DistanceIR*)dev->getDev());
+      break;
+      case DISTANCE_IR_V2_DEVICE_IDENTIFIER:
+        distance_ir_destroy((DistanceIRV2*)dev->getDev());
       break;
       case DISTANCE_US_DEVICE_IDENTIFIER:
         distance_us_destroy((DistanceUS*)dev->getDev());
@@ -184,9 +188,9 @@ void TinkerforgeSensors::publishImuMessage(SensorDevice *sensor)
       f_ang_z = float(ang_z) / 14.375;
 
       // acceleration from mG to m/s²
-      f_acc_x = (float(acc_x)/1000.0)*9.80605;
-      f_acc_y = (float(acc_y)/1000.0)*9.80605;
-      f_acc_z = (float(acc_z)/1000.0)*9.80605;
+      f_acc_x = (float(acc_x)/1000.0)*9.80665;
+      f_acc_y = (float(acc_y)/1000.0)*9.80665;
+      f_acc_z = (float(acc_z)/1000.0)*9.80665;
       
       imu_msg.orientation.x = w;
       imu_msg.orientation.y = z*-1;
@@ -282,22 +286,17 @@ void TinkerforgeSensors::publishAccelerometerMessage(SensorDevice *sensor)
   {
     sensor_msgs::Imu accelerometer_msg;
 
-     // for Accelerometer Bricklet look at https://www.tinkerforge.com/en/doc/Software/Bricklets/Accelerometer_Bricklet_C.html#accelerometer-bricklet-c-api
+    // for Accelerometer Bricklet look at https://www.tinkerforge.com/en/doc/Software/Bricklets/Accelerometer_Bricklet_C.html#accelerometer-bricklet-c-api
     if (sensor->getType() == ACCELEROMETER_DEVICE_IDENTIFIER)
     {
+      //Return the acceleration in x, y and z direction. The values are given in g/1000 (1g = 9.80665m/s²)	
       accelerometer_get_acceleration((Accelerometer*)sensor->getDev(), &acc_x, &acc_y, &acc_z);
       accelerometer_get_temperature((Accelerometer*)sensor->getDev(), &acc_temp);
-  
-      // acceleration from 0.01*m/s^2 to m/s^2
-      f_acc_x = float(acc_x);
-      f_acc_y = float(acc_y);
-      f_acc_z = float(acc_z);
-   
-     // acceleration from mG to m/s²
-     // f_acc_x = (float(acc_x)/1000.0)*9.80605;
-     // f_acc_y = (float(acc_y)/1000.0)*9.80605;
-     // f_acc_z = (float(acc_z)/1000.0)*9.80605;
 
+      //convert acceleration from mG to m/s²
+      f_acc_x = (float(acc_x)/1000.0)*9.80665;
+      f_acc_y = (float(acc_y)/1000.0)*9.80665;
+      f_acc_z = (float(acc_z)/1000.0)*9.80665;
     }
     else
     {
@@ -481,6 +480,18 @@ void TinkerforgeSensors::publishRangeMessage(SensorDevice *sensor)
     else if (sensor->getType() == DISTANCE_IR_DEVICE_IDENTIFIER)
     {
       if(distance_ir_get_distance((DistanceIR*)sensor->getDev(), &distance) < 0) {
+        ROS_ERROR_STREAM("Could not get range ir from " << sensor->getUID() << ", probably timeout");
+        return;
+      }
+      range_msg.radiation_type = sensor_msgs::Range::INFRARED;
+      range_msg.range = distance / 1000.0;
+      range_msg.field_of_view = 0.01;
+      range_msg.min_range = 0.03;
+      range_msg.max_range = 0.4;
+    }
+    else if (sensor->getType() == DISTANCE_IR_V2_DEVICE_IDENTIFIER)
+    {
+      if(distance_ir_v2_get_distance((DistanceIRV2*)sensor->getDev(), &distance) < 0) {
         ROS_ERROR_STREAM("Could not get range ir from " << sensor->getUID() << ", probably timeout");
         return;
       }
@@ -738,6 +749,15 @@ void TinkerforgeSensors::callbackEnumerate(const char *uid, const char *connecte
     distance_ir_create(distance_ir, uid, &(tfs->ipcon));
     SensorDevice *distance_ir_dev = new SensorDevice(distance_ir, uid, topic, DISTANCE_IR_DEVICE_IDENTIFIER, SensorClass::RANGE, 10);
     tfs->sensors.push_back(distance_ir_dev);
+  }
+  else if (device_identifier == DISTANCE_IR_V2_DEVICE_IDENTIFIER)
+  {
+    ROS_INFO_STREAM("found Distance IR V2 with UID:" << uid);
+    // Create Distance IR V2 device object
+    DistanceIRV2 *distance_ir_v2 = new DistanceIRV2();
+    distance_ir_v2_create(distance_ir_v2, uid, &(tfs->ipcon));
+    SensorDevice *distance_ir_v2_dev = new SensorDevice(distance_ir_v2, uid, topic, DISTANCE_IR_V2_DEVICE_IDENTIFIER, SensorClass::RANGE, 10);
+    tfs->sensors.push_back(distance_ir_v2_dev);
   }
   else if (device_identifier == DISTANCE_US_DEVICE_IDENTIFIER)
   {

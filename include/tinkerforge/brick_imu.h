@@ -1,11 +1,11 @@
 /* ***********************************************************
- * This file was automatically generated on 2014-08-11.      *
+ * This file was automatically generated on 2018-11-28.      *
  *                                                           *
- * Bindings Version 2.1.4                                    *
+ * C/C++ Bindings Version 2.1.23                             *
  *                                                           *
  * If you have a bugfix for this file and want to commit it, *
  * please fix the bug in the generator. You can find a link  *
- * to the generator git on tinkerforge.com                   *
+ * to the generators git repository on tinkerforge.com       *
  *************************************************************/
 
 #ifndef BRICK_IMU_H
@@ -24,7 +24,7 @@ extern "C" {
 /**
  * \ingroup BrickIMU
  *
- * Device for sensing acceleration, magnetic field and angular velocity
+ * Full fledged AHRS with 9 degrees of freedom
  */
 typedef Device IMU;
 
@@ -196,6 +196,51 @@ typedef Device IMU;
 /**
  * \ingroup BrickIMU
  */
+#define IMU_FUNCTION_SET_SPITFP_BAUDRATE_CONFIG 231
+
+/**
+ * \ingroup BrickIMU
+ */
+#define IMU_FUNCTION_GET_SPITFP_BAUDRATE_CONFIG 232
+
+/**
+ * \ingroup BrickIMU
+ */
+#define IMU_FUNCTION_GET_SEND_TIMEOUT_COUNT 233
+
+/**
+ * \ingroup BrickIMU
+ */
+#define IMU_FUNCTION_SET_SPITFP_BAUDRATE 234
+
+/**
+ * \ingroup BrickIMU
+ */
+#define IMU_FUNCTION_GET_SPITFP_BAUDRATE 235
+
+/**
+ * \ingroup BrickIMU
+ */
+#define IMU_FUNCTION_GET_SPITFP_ERROR_COUNT 237
+
+/**
+ * \ingroup BrickIMU
+ */
+#define IMU_FUNCTION_ENABLE_STATUS_LED 238
+
+/**
+ * \ingroup BrickIMU
+ */
+#define IMU_FUNCTION_DISABLE_STATUS_LED 239
+
+/**
+ * \ingroup BrickIMU
+ */
+#define IMU_FUNCTION_IS_STATUS_LED_ENABLED 240
+
+/**
+ * \ingroup BrickIMU
+ */
 #define IMU_FUNCTION_GET_PROTOCOL1_BRICKLET_NAME 241
 
 /**
@@ -230,8 +275,8 @@ typedef Device IMU;
  * Signature: \code void callback(int16_t x, int16_t y, int16_t z, void *user_data) \endcode
  * 
  * This callback is triggered periodically with the period that is set by
- * {@link imu_set_magnetic_field_period}. The parameters are the magnetic field
- * for the x, y and z axis.
+ * {@link imu_set_magnetic_field_period}. The parameters are the magnetic
+ * field for the x, y and z axis.
  */
 #define IMU_CALLBACK_MAGNETIC_FIELD 32
 
@@ -241,8 +286,8 @@ typedef Device IMU;
  * Signature: \code void callback(int16_t x, int16_t y, int16_t z, void *user_data) \endcode
  * 
  * This callback is triggered periodically with the period that is set by
- * {@link imu_set_angular_velocity_period}. The parameters are the angular velocity
- * for the x, y and z axis.
+ * {@link imu_set_angular_velocity_period}. The parameters are the angular
+ * velocity for the x, y and z axis.
  */
 #define IMU_CALLBACK_ANGULAR_VELOCITY 33
 
@@ -315,6 +360,46 @@ typedef Device IMU;
 
 /**
  * \ingroup BrickIMU
+ */
+#define IMU_COMMUNICATION_METHOD_NONE 0
+
+/**
+ * \ingroup BrickIMU
+ */
+#define IMU_COMMUNICATION_METHOD_USB 1
+
+/**
+ * \ingroup BrickIMU
+ */
+#define IMU_COMMUNICATION_METHOD_SPI_STACK 2
+
+/**
+ * \ingroup BrickIMU
+ */
+#define IMU_COMMUNICATION_METHOD_CHIBI 3
+
+/**
+ * \ingroup BrickIMU
+ */
+#define IMU_COMMUNICATION_METHOD_RS485 4
+
+/**
+ * \ingroup BrickIMU
+ */
+#define IMU_COMMUNICATION_METHOD_WIFI 5
+
+/**
+ * \ingroup BrickIMU
+ */
+#define IMU_COMMUNICATION_METHOD_ETHERNET 6
+
+/**
+ * \ingroup BrickIMU
+ */
+#define IMU_COMMUNICATION_METHOD_WIFI_V2 7
+
+/**
+ * \ingroup BrickIMU
  *
  * This constant is used to identify a IMU Brick.
  *
@@ -323,6 +408,13 @@ typedef Device IMU;
  * \c device_identifier parameter to specify the Brick's or Bricklet's type.
  */
 #define IMU_DEVICE_IDENTIFIER 16
+
+/**
+ * \ingroup BrickIMU
+ *
+ * This constant represents the display name of a IMU Brick.
+ */
+#define IMU_DEVICE_DISPLAY_NAME "IMU Brick"
 
 /**
  * \ingroup BrickIMU
@@ -367,8 +459,7 @@ int imu_get_response_expected(IMU *imu, uint8_t function_id, bool *ret_response_
  * Changes the response expected flag of the function specified by the
  * \c function_id parameter. This flag can only be changed for setter
  * (default value: *false*) and callback configuration functions
- * (default value: *true*). For getter functions it is always enabled and
- * callbacks it is always disabled.
+ * (default value: *true*). For getter functions it is always enabled.
  *
  * Enabling the response expected flag for a setter function allows to detect
  * timeouts and other error conditions calls of this setter as well. The device
@@ -389,10 +480,10 @@ int imu_set_response_expected_all(IMU *imu, bool response_expected);
 /**
  * \ingroup BrickIMU
  *
- * Registers a callback with ID \c id to the function \c callback. The
- * \c user_data will be given as a parameter of the callback.
+ * Registers the given \c function with the given \c callback_id. The
+ * \c user_data will be passed as the last parameter to the \c function.
  */
-void imu_register_callback(IMU *imu, uint8_t id, void *callback, void *user_data);
+void imu_register_callback(IMU *imu, int16_t callback_id, void *function, void *user_data);
 
 /**
  * \ingroup BrickIMU
@@ -405,11 +496,11 @@ int imu_get_api_version(IMU *imu, uint8_t ret_api_version[3]);
 /**
  * \ingroup BrickIMU
  *
- * Returns the calibrated acceleration from the accelerometer for the 
- * x, y and z axis in mG (G/1000, 1G = 9.80605m/s²).
+ * Returns the calibrated acceleration from the accelerometer for the
+ * x, y and z axis in g/1000 (1g = 9.80665m/s²).
  * 
- * If you want to get the acceleration periodically, it is recommended 
- * to use the callback {@link IMU_CALLBACK_ACCELERATION} and set the period with 
+ * If you want to get the acceleration periodically, it is recommended
+ * to use the {@link IMU_CALLBACK_ACCELERATION} callback and set the period with
  * {@link imu_set_acceleration_period}.
  */
 int imu_get_acceleration(IMU *imu, int16_t *ret_x, int16_t *ret_y, int16_t *ret_z);
@@ -417,11 +508,11 @@ int imu_get_acceleration(IMU *imu, int16_t *ret_x, int16_t *ret_y, int16_t *ret_
 /**
  * \ingroup BrickIMU
  *
- * Returns the calibrated magnetic field from the magnetometer for the 
+ * Returns the calibrated magnetic field from the magnetometer for the
  * x, y and z axis in mG (Milligauss or Nanotesla).
  * 
- * If you want to get the magnetic field periodically, it is recommended 
- * to use the callback {@link IMU_CALLBACK_MAGNETIC_FIELD} and set the period with 
+ * If you want to get the magnetic field periodically, it is recommended
+ * to use the {@link IMU_CALLBACK_MAGNETIC_FIELD} callback and set the period with
  * {@link imu_set_magnetic_field_period}.
  */
 int imu_get_magnetic_field(IMU *imu, int16_t *ret_x, int16_t *ret_y, int16_t *ret_z);
@@ -429,12 +520,12 @@ int imu_get_magnetic_field(IMU *imu, int16_t *ret_x, int16_t *ret_y, int16_t *re
 /**
  * \ingroup BrickIMU
  *
- * Returns the calibrated angular velocity from the gyroscope for the 
+ * Returns the calibrated angular velocity from the gyroscope for the
  * x, y and z axis in °/14.375s (you have to divide by 14.375 to
  * get the value in °/s).
  * 
- * If you want to get the angular velocity periodically, it is recommended 
- * to use the callback {@link IMU_CALLBACK_ANGULAR_VELOCITY} and set the period with 
+ * If you want to get the angular velocity periodically, it is recommended
+ * to use the {@link IMU_CALLBACK_ANGULAR_VELOCITY} callback and set the period with
  * {@link imu_set_angular_velocity_period}.
  */
 int imu_get_angular_velocity(IMU *imu, int16_t *ret_x, int16_t *ret_y, int16_t *ret_z);
@@ -442,13 +533,13 @@ int imu_get_angular_velocity(IMU *imu, int16_t *ret_x, int16_t *ret_y, int16_t *
 /**
  * \ingroup BrickIMU
  *
- * Returns the data from {@link imu_get_acceleration}, {@link imu_get_magnetic_field} 
+ * Returns the data from {@link imu_get_acceleration}, {@link imu_get_magnetic_field}
  * and {@link imu_get_angular_velocity} as well as the temperature of the IMU Brick.
  * 
  * The temperature is given in °C/100.
  * 
- * If you want to get the data periodically, it is recommended 
- * to use the callback {@link IMU_CALLBACK_ALL_DATA} and set the period with 
+ * If you want to get the data periodically, it is recommended
+ * to use the {@link IMU_CALLBACK_ALL_DATA} callback and set the period with
  * {@link imu_set_all_data_period}.
  */
 int imu_get_all_data(IMU *imu, int16_t *ret_acc_x, int16_t *ret_acc_y, int16_t *ret_acc_z, int16_t *ret_mag_x, int16_t *ret_mag_y, int16_t *ret_mag_z, int16_t *ret_ang_x, int16_t *ret_ang_y, int16_t *ret_ang_z, int16_t *ret_temperature);
@@ -458,15 +549,15 @@ int imu_get_all_data(IMU *imu, int16_t *ret_acc_x, int16_t *ret_acc_y, int16_t *
  *
  * Returns the current orientation (roll, pitch, yaw) of the IMU Brick as Euler
  * angles in one-hundredth degree. Note that Euler angles always experience a
- * `gimbal lock <http://en.wikipedia.org/wiki/Gimbal_lock>`__.
+ * `gimbal lock <https://en.wikipedia.org/wiki/Gimbal_lock>`__.
  * 
  * We recommend that you use quaternions instead.
  * 
- * The order to sequence in which the orientation values should be applied is 
- * roll, yaw, pitch. 
+ * The order to sequence in which the orientation values should be applied is
+ * roll, yaw, pitch.
  * 
- * If you want to get the orientation periodically, it is recommended 
- * to use the callback {@link IMU_CALLBACK_ORIENTATION} and set the period with 
+ * If you want to get the orientation periodically, it is recommended
+ * to use the {@link IMU_CALLBACK_ORIENTATION} callback and set the period with
  * {@link imu_set_orientation_period}.
  */
 int imu_get_orientation(IMU *imu, int16_t *ret_roll, int16_t *ret_pitch, int16_t *ret_yaw);
@@ -474,8 +565,8 @@ int imu_get_orientation(IMU *imu, int16_t *ret_roll, int16_t *ret_pitch, int16_t
 /**
  * \ingroup BrickIMU
  *
- * Returns the current orientation (x, y, z, w) of the IMU as 
- * `quaternions <http://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation>`__.
+ * Returns the current orientation (x, y, z, w) of the IMU as
+ * `quaternions <https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation>`__.
  * 
  * You can go from quaternions to Euler angles with the following formula::
  * 
@@ -483,12 +574,12 @@ int imu_get_orientation(IMU *imu, int16_t *ret_roll, int16_t *ret_pitch, int16_t
  *  yAngle = atan2(2*x*w - 2*y*z, 1 - 2*x*x - 2*z*z)
  *  zAngle =  asin(2*x*y + 2*z*w)
  * 
- * This process is not reversible, because of the 
- * `gimbal lock <http://en.wikipedia.org/wiki/Gimbal_lock>`__.
+ * This process is not reversible, because of the
+ * `gimbal lock <https://en.wikipedia.org/wiki/Gimbal_lock>`__.
  * 
- * It is also possible to calculate independent angles. You can calculate 
- * yaw, pitch and roll in a right-handed vehicle coordinate system according to DIN70000
- * with::
+ * It is also possible to calculate independent angles. You can calculate
+ * yaw, pitch and roll in a right-handed vehicle coordinate system according to
+ * DIN70000 with::
  * 
  *  yaw   =  atan2(2*x*y + 2*w*z, w*w + x*x - y*y - z*z)
  *  pitch = -asin(2*w*y - 2*x*z)
@@ -502,8 +593,8 @@ int imu_get_orientation(IMU *imu, int16_t *ret_roll, int16_t *ret_pitch, int16_t
  *            [    2*(x*z - w*y),     2*(y*z + w*x), 1 - 2*(x*x + y*y), 0],
  *            [                0,                 0,                 0, 1]]
  * 
- * If you want to get the quaternions periodically, it is recommended 
- * to use the callback {@link IMU_CALLBACK_QUATERNION} and set the period with 
+ * If you want to get the quaternions periodically, it is recommended
+ * to use the {@link IMU_CALLBACK_QUATERNION} callback and set the period with
  * {@link imu_set_quaternion_period}.
  */
 int imu_get_quaternion(IMU *imu, float *ret_x, float *ret_y, float *ret_z, float *ret_w);
@@ -511,7 +602,7 @@ int imu_get_quaternion(IMU *imu, float *ret_x, float *ret_y, float *ret_z, float
 /**
  * \ingroup BrickIMU
  *
- * Returns the temperature of the IMU Brick. The temperature is given in 
+ * Returns the temperature of the IMU Brick. The temperature is given in
  * °C/100.
  */
 int imu_get_imu_temperature(IMU *imu, int16_t *ret_temperature);
@@ -569,10 +660,10 @@ int imu_get_magnetometer_range(IMU *imu, uint8_t *ret_range);
 /**
  * \ingroup BrickIMU
  *
- * Sets the convergence speed of the IMU Brick in °/s. The convergence speed 
+ * Sets the convergence speed of the IMU Brick in °/s. The convergence speed
  * determines how the different sensor measurements are fused.
  * 
- * If the orientation of the IMU Brick is off by 10° and the convergence speed is 
+ * If the orientation of the IMU Brick is off by 10° and the convergence speed is
  * set to 20°/s, it will take 0.5s until the orientation is corrected. However,
  * if the correct orientation is reached and the convergence speed is too high,
  * the orientation will fluctuate with the fluctuations of the accelerometer and
@@ -588,8 +679,8 @@ int imu_get_magnetometer_range(IMU *imu, uint8_t *ret_range);
  * In an application with high angular velocities, we recommend a high convergence
  * speed, so the errors of the gyroscope can be corrected fast. In applications with
  * only slow movements we recommend a low convergence speed. You can change the
- * convergence speed on the fly. So it is possible (and recommended) to increase 
- * the convergence speed before an abrupt movement and decrease it afterwards 
+ * convergence speed on the fly. So it is possible (and recommended) to increase
+ * the convergence speed before an abrupt movement and decrease it afterwards
  * again.
  * 
  * You might want to play around with the convergence speed in the Brick Viewer to
@@ -673,8 +764,8 @@ int imu_get_acceleration_period(IMU *imu, uint32_t *ret_period);
 /**
  * \ingroup BrickIMU
  *
- * Sets the period in ms with which the {@link IMU_CALLBACK_MAGNETIC_FIELD} callback is triggered
- * periodically. A value of 0 turns the callback off.
+ * Sets the period in ms with which the {@link IMU_CALLBACK_MAGNETIC_FIELD} callback is
+ * triggered periodically. A value of 0 turns the callback off.
  */
 int imu_set_magnetic_field_period(IMU *imu, uint32_t period);
 
@@ -688,8 +779,8 @@ int imu_get_magnetic_field_period(IMU *imu, uint32_t *ret_period);
 /**
  * \ingroup BrickIMU
  *
- * Sets the period in ms with which the {@link IMU_CALLBACK_ANGULAR_VELOCITY} callback is triggered
- * periodically. A value of 0 turns the callback off.
+ * Sets the period in ms with which the {@link IMU_CALLBACK_ANGULAR_VELOCITY} callback is
+ * triggered periodically. A value of 0 turns the callback off.
  */
 int imu_set_angular_velocity_period(IMU *imu, uint32_t period);
 
@@ -752,7 +843,7 @@ int imu_get_quaternion_period(IMU *imu, uint32_t *ret_period);
  * 
  * As default the calculation is on.
  * 
- * .. versionadded:: 2.0.2~(Firmware)
+ * .. versionadded:: 2.0.2$nbsp;(Firmware)
  */
 int imu_orientation_calculation_on(IMU *imu);
 
@@ -764,14 +855,14 @@ int imu_orientation_calculation_on(IMU *imu);
  * If the calculation is off, {@link imu_get_orientation} will return
  * the last calculated value until the calculation is turned on again.
  * 
- * The trigonometric functions that are needed to calculate the orientation 
+ * The trigonometric functions that are needed to calculate the orientation
  * are very expensive. We recommend to turn the orientation calculation
  * off if the orientation is not needed, to free calculation time for the
  * sensor fusion algorithm.
  * 
  * As default the calculation is on.
  * 
- * .. versionadded:: 2.0.2~(Firmware)
+ * .. versionadded:: 2.0.2$nbsp;(Firmware)
  */
 int imu_orientation_calculation_off(IMU *imu);
 
@@ -781,9 +872,151 @@ int imu_orientation_calculation_off(IMU *imu);
  * Returns *true* if the orientation calculation of the IMU Brick
  * is on, *false* otherwise.
  * 
- * .. versionadded:: 2.0.2~(Firmware)
+ * .. versionadded:: 2.0.2$nbsp;(Firmware)
  */
 int imu_is_orientation_calculation_on(IMU *imu, bool *ret_orientation_calculation_on);
+
+/**
+ * \ingroup BrickIMU
+ *
+ * The SPITF protocol can be used with a dynamic baudrate. If the dynamic baudrate is
+ * enabled, the Brick will try to adapt the baudrate for the communication
+ * between Bricks and Bricklets according to the amount of data that is transferred.
+ * 
+ * The baudrate will be increased exponentially if lots of data is send/received and
+ * decreased linearly if little data is send/received.
+ * 
+ * This lowers the baudrate in applications where little data is transferred (e.g.
+ * a weather station) and increases the robustness. If there is lots of data to transfer
+ * (e.g. Thermal Imaging Bricklet) it automatically increases the baudrate as needed.
+ * 
+ * In cases where some data has to transferred as fast as possible every few seconds
+ * (e.g. RS485 Bricklet with a high baudrate but small payload) you may want to turn
+ * the dynamic baudrate off to get the highest possible performance.
+ * 
+ * The maximum value of the baudrate can be set per port with the function
+ * {@link imu_set_spitfp_baudrate}. If the dynamic baudrate is disabled, the baudrate
+ * as set by {@link imu_set_spitfp_baudrate} will be used statically.
+ * 
+ * The minimum dynamic baudrate has a value range of 400000 to 2000000 baud.
+ * 
+ * By default dynamic baudrate is enabled and the minimum dynamic baudrate is 400000.
+ * 
+ * .. versionadded:: 2.3.5$nbsp;(Firmware)
+ */
+int imu_set_spitfp_baudrate_config(IMU *imu, bool enable_dynamic_baudrate, uint32_t minimum_dynamic_baudrate);
+
+/**
+ * \ingroup BrickIMU
+ *
+ * Returns the baudrate config, see {@link imu_set_spitfp_baudrate_config}.
+ * 
+ * .. versionadded:: 2.3.5$nbsp;(Firmware)
+ */
+int imu_get_spitfp_baudrate_config(IMU *imu, bool *ret_enable_dynamic_baudrate, uint32_t *ret_minimum_dynamic_baudrate);
+
+/**
+ * \ingroup BrickIMU
+ *
+ * Returns the timeout count for the different communication methods.
+ * 
+ * The methods 0-2 are available for all Bricks, 3-7 only for Master Bricks.
+ * 
+ * This function is mostly used for debugging during development, in normal operation
+ * the counters should nearly always stay at 0.
+ * 
+ * .. versionadded:: 2.3.3$nbsp;(Firmware)
+ */
+int imu_get_send_timeout_count(IMU *imu, uint8_t communication_method, uint32_t *ret_timeout_count);
+
+/**
+ * \ingroup BrickIMU
+ *
+ * Sets the baudrate for a specific Bricklet port ('a' - 'd'). The
+ * baudrate can be in the range 400000 to 2000000.
+ * 
+ * If you want to increase the throughput of Bricklets you can increase
+ * the baudrate. If you get a high error count because of high
+ * interference (see {@link imu_get_spitfp_error_count}) you can decrease the
+ * baudrate.
+ * 
+ * If the dynamic baudrate feature is enabled, the baudrate set by this
+ * function corresponds to the maximum baudrate (see {@link imu_set_spitfp_baudrate_config}).
+ * 
+ * Regulatory testing is done with the default baudrate. If CE compatibility
+ * or similar is necessary in you applications we recommend to not change
+ * the baudrate.
+ * 
+ * The default baudrate for all ports is 1400000.
+ * 
+ * .. versionadded:: 2.3.3$nbsp;(Firmware)
+ */
+int imu_set_spitfp_baudrate(IMU *imu, char bricklet_port, uint32_t baudrate);
+
+/**
+ * \ingroup BrickIMU
+ *
+ * Returns the baudrate for a given Bricklet port, see {@link imu_set_spitfp_baudrate}.
+ * 
+ * .. versionadded:: 2.3.3$nbsp;(Firmware)
+ */
+int imu_get_spitfp_baudrate(IMU *imu, char bricklet_port, uint32_t *ret_baudrate);
+
+/**
+ * \ingroup BrickIMU
+ *
+ * Returns the error count for the communication between Brick and Bricklet.
+ * 
+ * The errors are divided into
+ * 
+ * * ACK checksum errors,
+ * * message checksum errors,
+ * * framing errors and
+ * * overflow errors.
+ * 
+ * The errors counts are for errors that occur on the Brick side. All
+ * Bricklets have a similar function that returns the errors on the Bricklet side.
+ * 
+ * .. versionadded:: 2.3.3$nbsp;(Firmware)
+ */
+int imu_get_spitfp_error_count(IMU *imu, char bricklet_port, uint32_t *ret_error_count_ack_checksum, uint32_t *ret_error_count_message_checksum, uint32_t *ret_error_count_frame, uint32_t *ret_error_count_overflow);
+
+/**
+ * \ingroup BrickIMU
+ *
+ * Enables the status LED.
+ * 
+ * The status LED is the blue LED next to the USB connector. If enabled is is
+ * on and it flickers if data is transfered. If disabled it is always off.
+ * 
+ * The default state is enabled.
+ * 
+ * .. versionadded:: 2.3.1$nbsp;(Firmware)
+ */
+int imu_enable_status_led(IMU *imu);
+
+/**
+ * \ingroup BrickIMU
+ *
+ * Disables the status LED.
+ * 
+ * The status LED is the blue LED next to the USB connector. If enabled is is
+ * on and it flickers if data is transfered. If disabled it is always off.
+ * 
+ * The default state is enabled.
+ * 
+ * .. versionadded:: 2.3.1$nbsp;(Firmware)
+ */
+int imu_disable_status_led(IMU *imu);
+
+/**
+ * \ingroup BrickIMU
+ *
+ * Returns *true* if the status LED is enabled, *false* otherwise.
+ * 
+ * .. versionadded:: 2.3.1$nbsp;(Firmware)
+ */
+int imu_is_status_led_enabled(IMU *imu, bool *ret_enabled);
 
 /**
  * \ingroup BrickIMU
@@ -823,7 +1056,7 @@ int imu_reset(IMU *imu);
 /**
  * \ingroup BrickIMU
  *
- * Returns the UID, the UID where the Brick is connected to, 
+ * Returns the UID, the UID where the Brick is connected to,
  * the position, the hardware and firmware version as well as the
  * device identifier.
  * 

@@ -1,11 +1,11 @@
 /* ***********************************************************
- * This file was automatically generated on 2014-12-10.      *
+ * This file was automatically generated on 2018-11-28.      *
  *                                                           *
- * Bindings Version 2.1.6                                    *
+ * C/C++ Bindings Version 2.1.23                             *
  *                                                           *
  * If you have a bugfix for this file and want to commit it, *
  * please fix the bug in the generator. You can find a link  *
- * to the generator git on tinkerforge.com                   *
+ * to the generators git repository on tinkerforge.com       *
  *************************************************************/
 
 #ifndef BRICKLET_DUAL_BUTTON_H
@@ -18,13 +18,13 @@ extern "C" {
 #endif
 
 /**
- * \defgroup BrickletDualButton DualButton Bricklet
+ * \defgroup BrickletDualButton Dual Button Bricklet
  */
 
 /**
  * \ingroup BrickletDualButton
  *
- * Device with two buttons and two LEDs
+ * Two tactile buttons with built-in blue LEDs
  */
 typedef Device DualButton;
 
@@ -58,7 +58,7 @@ typedef Device DualButton;
  *
  * Signature: \code void callback(uint8_t button_l, uint8_t button_r, uint8_t led_l, uint8_t led_r, void *user_data) \endcode
  * 
- * This callback is called whenever a button is pressed. 
+ * This callback is called whenever a button is pressed.
  * 
  * Possible states for buttons are:
  * 
@@ -118,13 +118,20 @@ typedef Device DualButton;
 /**
  * \ingroup BrickletDualButton
  *
- * This constant is used to identify a DualButton Bricklet.
+ * This constant is used to identify a Dual Button Bricklet.
  *
  * The {@link dual_button_get_identity} function and the
  * {@link IPCON_CALLBACK_ENUMERATE} callback of the IP Connection have a
  * \c device_identifier parameter to specify the Brick's or Bricklet's type.
  */
 #define DUAL_BUTTON_DEVICE_IDENTIFIER 230
+
+/**
+ * \ingroup BrickletDualButton
+ *
+ * This constant represents the display name of a Dual Button Bricklet.
+ */
+#define DUAL_BUTTON_DEVICE_DISPLAY_NAME "Dual Button Bricklet"
 
 /**
  * \ingroup BrickletDualButton
@@ -169,8 +176,7 @@ int dual_button_get_response_expected(DualButton *dual_button, uint8_t function_
  * Changes the response expected flag of the function specified by the
  * \c function_id parameter. This flag can only be changed for setter
  * (default value: *false*) and callback configuration functions
- * (default value: *true*). For getter functions it is always enabled and
- * callbacks it is always disabled.
+ * (default value: *true*). For getter functions it is always enabled.
  *
  * Enabling the response expected flag for a setter function allows to detect
  * timeouts and other error conditions calls of this setter as well. The device
@@ -191,10 +197,10 @@ int dual_button_set_response_expected_all(DualButton *dual_button, bool response
 /**
  * \ingroup BrickletDualButton
  *
- * Registers a callback with ID \c id to the function \c callback. The
- * \c user_data will be given as a parameter of the callback.
+ * Registers the given \c function with the given \c callback_id. The
+ * \c user_data will be passed as the last parameter to the \c function.
  */
-void dual_button_register_callback(DualButton *dual_button, uint8_t id, void *callback, void *user_data);
+void dual_button_register_callback(DualButton *dual_button, int16_t callback_id, void *function, void *user_data);
 
 /**
  * \ingroup BrickletDualButton
@@ -244,7 +250,7 @@ int dual_button_get_button_state(DualButton *dual_button, uint8_t *ret_button_l,
 /**
  * \ingroup BrickletDualButton
  *
- * Sets the state of the selected LED (0 or 1). 
+ * Sets the state of the selected LED (0 or 1).
  * 
  * The other LED remains untouched.
  */
@@ -253,7 +259,7 @@ int dual_button_set_selected_led_state(DualButton *dual_button, uint8_t led, uin
 /**
  * \ingroup BrickletDualButton
  *
- * Returns the UID, the UID where the Bricklet is connected to, 
+ * Returns the UID, the UID where the Bricklet is connected to,
  * the position, the hardware and firmware version as well as the
  * device identifier.
  * 

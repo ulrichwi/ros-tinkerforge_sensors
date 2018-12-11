@@ -16,6 +16,7 @@
 #include "bricklet_ambient_light.h"
 #include "bricklet_temperature.h"
 #include "bricklet_distance_ir.h"
+#include "bricklet_distance_ir_v2.h"
 #include "bricklet_distance_us.h"
 #include "bricklet_motion_detector.h"
 

@@ -10,6 +10,7 @@
 #include "bricklet_ambient_light.h"
 #include "bricklet_ambient_light_v2.h"
 #include "bricklet_distance_ir.h"
+#include "bricklet_distance_ir_v2.h"
 #include "bricklet_distance_us.h"
 #include "bricklet_gps.h"
 #include "brick_imu.h"

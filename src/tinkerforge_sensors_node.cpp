@@ -82,6 +82,9 @@ int main (int argc, char **argv)
       case DISTANCE_IR_DEVICE_IDENTIFIER:
         (*Iter)->setPub(n.advertise<sensor_msgs::Range>((*Iter)->getTopic().c_str(), 50));
       break;
+      case DISTANCE_IR_V2_DEVICE_IDENTIFIER:
+        (*Iter)->setPub(n.advertise<sensor_msgs::Range>((*Iter)->getTopic().c_str(), 50));
+      break;
       case DISTANCE_US_DEVICE_IDENTIFIER:
         (*Iter)->setPub(n.advertise<sensor_msgs::Range>((*Iter)->getTopic().c_str(), 50));
       break;

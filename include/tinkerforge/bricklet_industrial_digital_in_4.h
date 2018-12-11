@@ -1,11 +1,11 @@
 /* ***********************************************************
- * This file was automatically generated on 2014-12-10.      *
+ * This file was automatically generated on 2018-11-28.      *
  *                                                           *
- * Bindings Version 2.1.6                                    *
+ * C/C++ Bindings Version 2.1.23                             *
  *                                                           *
  * If you have a bugfix for this file and want to commit it, *
  * please fix the bug in the generator. You can find a link  *
- * to the generator git on tinkerforge.com                   *
+ * to the generators git repository on tinkerforge.com       *
  *************************************************************/
 
 #ifndef BRICKLET_INDUSTRIAL_DIGITAL_IN_4_H
@@ -18,13 +18,13 @@ extern "C" {
 #endif
 
 /**
- * \defgroup BrickletIndustrialDigitalIn4 IndustrialDigitalIn4 Bricklet
+ * \defgroup BrickletIndustrialDigitalIn4 Industrial Digital In 4 Bricklet
  */
 
 /**
  * \ingroup BrickletIndustrialDigitalIn4
  *
- * Device for controlling up to 4 optically coupled digital inputs
+ * 4 galvanically isolated digital inputs
  */
 typedef Device IndustrialDigitalIn4;
 
@@ -127,13 +127,20 @@ typedef Device IndustrialDigitalIn4;
 /**
  * \ingroup BrickletIndustrialDigitalIn4
  *
- * This constant is used to identify a IndustrialDigitalIn4 Bricklet.
+ * This constant is used to identify a Industrial Digital In 4 Bricklet.
  *
  * The {@link industrial_digital_in_4_get_identity} function and the
  * {@link IPCON_CALLBACK_ENUMERATE} callback of the IP Connection have a
  * \c device_identifier parameter to specify the Brick's or Bricklet's type.
  */
 #define INDUSTRIAL_DIGITAL_IN_4_DEVICE_IDENTIFIER 223
+
+/**
+ * \ingroup BrickletIndustrialDigitalIn4
+ *
+ * This constant represents the display name of a Industrial Digital In 4 Bricklet.
+ */
+#define INDUSTRIAL_DIGITAL_IN_4_DEVICE_DISPLAY_NAME "Industrial Digital In 4 Bricklet"
 
 /**
  * \ingroup BrickletIndustrialDigitalIn4
@@ -178,8 +185,7 @@ int industrial_digital_in_4_get_response_expected(IndustrialDigitalIn4 *industri
  * Changes the response expected flag of the function specified by the
  * \c function_id parameter. This flag can only be changed for setter
  * (default value: *false*) and callback configuration functions
- * (default value: *true*). For getter functions it is always enabled and
- * callbacks it is always disabled.
+ * (default value: *true*). For getter functions it is always enabled.
  *
  * Enabling the response expected flag for a setter function allows to detect
  * timeouts and other error conditions calls of this setter as well. The device
@@ -200,10 +206,10 @@ int industrial_digital_in_4_set_response_expected_all(IndustrialDigitalIn4 *indu
 /**
  * \ingroup BrickletIndustrialDigitalIn4
  *
- * Registers a callback with ID \c id to the function \c callback. The
- * \c user_data will be given as a parameter of the callback.
+ * Registers the given \c function with the given \c callback_id. The
+ * \c user_data will be passed as the last parameter to the \c function.
  */
-void industrial_digital_in_4_register_callback(IndustrialDigitalIn4 *industrial_digital_in_4, uint8_t id, void *callback, void *user_data);
+void industrial_digital_in_4_register_callback(IndustrialDigitalIn4 *industrial_digital_in_4, int16_t callback_id, void *function, void *user_data);
 
 /**
  * \ingroup BrickletIndustrialDigitalIn4
@@ -303,7 +309,7 @@ int industrial_digital_in_4_get_debounce_period(IndustrialDigitalIn4 *industrial
  * 
  * The interrupts use the grouping as set by {@link industrial_digital_in_4_set_group}.
  * 
- * The interrupt is delivered with the callback {@link INDUSTRIAL_DIGITAL_IN_4_CALLBACK_INTERRUPT}.
+ * The interrupt is delivered with the {@link INDUSTRIAL_DIGITAL_IN_4_CALLBACK_INTERRUPT} callback.
  */
 int industrial_digital_in_4_set_interrupt(IndustrialDigitalIn4 *industrial_digital_in_4, uint16_t interrupt_mask);
 
@@ -323,7 +329,7 @@ int industrial_digital_in_4_get_interrupt(IndustrialDigitalIn4 *industrial_digit
  * If you set the reset counter to *true*, the count is set back to 0
  * directly after it is read.
  * 
- * .. versionadded:: 2.0.1~(Plugin)
+ * .. versionadded:: 2.0.1$nbsp;(Plugin)
  */
 int industrial_digital_in_4_get_edge_count(IndustrialDigitalIn4 *industrial_digital_in_4, uint8_t pin, bool reset_counter, uint32_t *ret_count);
 
@@ -349,7 +355,7 @@ int industrial_digital_in_4_get_edge_count(IndustrialDigitalIn4 *industrial_digi
  * 
  * Default values: 0 (edge type) and 100ms (debounce time)
  * 
- * .. versionadded:: 2.0.1~(Plugin)
+ * .. versionadded:: 2.0.1$nbsp;(Plugin)
  */
 int industrial_digital_in_4_set_edge_count_config(IndustrialDigitalIn4 *industrial_digital_in_4, uint16_t selection_mask, uint8_t edge_type, uint8_t debounce);
 
@@ -359,14 +365,14 @@ int industrial_digital_in_4_set_edge_count_config(IndustrialDigitalIn4 *industri
  * Returns the edge type and debounce time for the selected pin as set by
  * {@link industrial_digital_in_4_set_edge_count_config}.
  * 
- * .. versionadded:: 2.0.1~(Plugin)
+ * .. versionadded:: 2.0.1$nbsp;(Plugin)
  */
 int industrial_digital_in_4_get_edge_count_config(IndustrialDigitalIn4 *industrial_digital_in_4, uint8_t pin, uint8_t *ret_edge_type, uint8_t *ret_debounce);
 
 /**
  * \ingroup BrickletIndustrialDigitalIn4
  *
- * Returns the UID, the UID where the Bricklet is connected to, 
+ * Returns the UID, the UID where the Bricklet is connected to,
  * the position, the hardware and firmware version as well as the
  * device identifier.
  * 

@@ -5,6 +5,7 @@
   <description>The tinkerforge_sensors package</description>
 
   <maintainer email="gustav484@web.de">Markus Fischer</maintainer>
+  <maintainer email="ulrik@gmx.at">Ulrich Wirleitner</maintainer>
   <license>MIT</license>
 
   <!-- Url tags are optional, but mutiple are allowed, one per tag -->
