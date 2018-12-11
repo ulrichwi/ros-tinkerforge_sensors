@@ -25,6 +25,7 @@ Bricklets:
 * GPS (Test) => sensor_msgs/NavSatFix
 * Motion Detector (Test)
 * Temperature => sensor_msgs/Temperature
+* Temperature IR V2 => sensor_msgs/Temperature
 
 Bricks:
 
