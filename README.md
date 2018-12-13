@@ -1,6 +1,6 @@
 ### Tinkerforge Sensors
 
-Note: This library was forked from https://github.com/gus484/ros-tinkerforge_sensors
+Note: This library was forked from https://github.com/james-rms/ros-tinkerforge_sensors which was forked from https://github.com/gus484/ros-tinkerforge_sensors
 
 Mit diesem Paket können Tinkerforge Sensoren im ROS genutzt werden. Auch Sensoren des gleichen Typs werden erkannt. Durch Nutzung des "robusten Ansatzes" ist die Angabe von UIDs nicht notwendig. Die Sensorwerte werden in entsprechende ROS-Messages über automatisch generierte Topics verbreitet. Unter Verwendung eines Launch-Files können Topic per UID manuell festgelegt werden.
 
