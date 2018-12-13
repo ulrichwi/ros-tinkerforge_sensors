@@ -497,6 +497,8 @@ void TinkerforgeSensors::publishRangeMessage(SensorDevice *sensor)
     sensor_msgs::Range range_msg;
 
     uint16_t distance;
+    uint8_t distance_ir;
+
     if (sensor->getType() == DISTANCE_US_DEVICE_IDENTIFIER)
     {
       if(distance_us_get_distance_value((DistanceUS*)sensor->getDev(), &distance) < 0) {
@@ -527,11 +529,22 @@ void TinkerforgeSensors::publishRangeMessage(SensorDevice *sensor)
         ROS_ERROR_STREAM("Could not get range ir from " << sensor->getUID() << ", probably timeout");
         return;
       }
-      range_msg.radiation_type = sensor_msgs::Range::INFRARED;
+      // https://www.tinkerforge.com/de/doc/Software/Bricklets/DistanceIRV2_Bricklet_C.html#c.distance_ir_v2_get_sensor_type
+      distance_ir_v2_get_sensor_type((DistanceIRV2*)sensor->getDev(), &distance_ir);
+      if (distance_ir == DISTANCE_IR_V2_SENSOR_TYPE_2Y0A41){
+          range_msg.min_range = 0.04;
+          range_msg.max_range = 0.3;
+      }
+      if (distance_ir == DISTANCE_IR_V2_SENSOR_TYPE_2Y0A21){
+          range_msg.min_range = 0.1;
+          range_msg.max_range = 0.8;
+      }
+      if (distance_ir == DISTANCE_IR_V2_SENSOR_TYPE_2Y0A02){
+          range_msg.min_range = 0.2;
+          range_msg.max_range = 1.5;
+      }
       range_msg.range = distance / 1000.0;
       range_msg.field_of_view = 0.01;
-      range_msg.min_range = 0.03;
-      range_msg.max_range = 0.4;
     }
     else
     {
